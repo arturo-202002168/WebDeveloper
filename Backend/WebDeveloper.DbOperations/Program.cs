@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
+using WebDeveloper.Infra.Data;
 
 namespace WebDeveloper.DbOperations
 {
@@ -8,8 +10,12 @@ namespace WebDeveloper.DbOperations
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
-            var context = new chinookContext();
-            var albums = context.Album.ToList();
+            // Instanciar el contexto de EF
+            var options = new DbContextOptionsBuilder<ChinookContext>()
+                .UseSqlServer("server=.;database=Chinook;trusted_connection=true;")
+                .Options;
+            var context = new ChinookContext(options);
+            var albums = context.Albums.ToList();
             foreach (var album in albums)
             {
                 Console.WriteLine($"Nombre del album: {album.Title}");
