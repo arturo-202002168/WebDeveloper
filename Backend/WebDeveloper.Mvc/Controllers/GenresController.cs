@@ -60,7 +60,7 @@ namespace WebDeveloper.Mvc.Controllers
             {
                 _context.Add(genre);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index");
             }
             return View(genre);
         }

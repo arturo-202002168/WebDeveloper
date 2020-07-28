@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using WebDeveloper.Core.Interfaces;
 using WebDeveloper.Core.ViewModels;
 using WebDeveloper.Infra.Data;
 
@@ -13,10 +14,12 @@ namespace WebDeveloper.Mvc.Controllers
 {
     public class ReportesController : Controller
     {
-        private readonly ChinookContext _context;
-        public ReportesController(ChinookContext context)
+        private readonly IChinookContext _context;
+        private readonly IReportesService _reportesService;
+        public ReportesController(IChinookContext context, IReportesService reportesService)
         {
             _context = context;
+            _reportesService = reportesService;
         }
         // GET: /<controller>/
         public IActionResult Index()
@@ -27,22 +30,15 @@ namespace WebDeveloper.Mvc.Controllers
         [Route("/reportes/albumes-por-artista")]
         public IActionResult AlbumesPorArtista()
         {
-            var items = _context.Artists.Select(a => new AlbumPorArtistaItemViewModel
-            {
-                ArtistId = a.ArtistId,
-                ArtistName = a.Name,
-                CantidadAlbumes = a.Albums.Count()
-            }).ToList();
-
-            // Crear el objeto view model que enviaremos a la vista
-            var model = new AlbumPorArtistaViewModel { Title = $"Se tienen {items.Count}", Items = items };
+            // Obtener el reporte de BD usando EF
+            var model = _reportesService.ObtenerAlbumPorArtista();
             return View(model);
         }
 
         [Route("/reportes/albumes-por-artista-sp")]
-        public IActionResult AlbumesPorArtistaSP()
+        public async Task<IActionResult> AlbumesPorArtistaSP()
         {
-            var items = _context.ArtistCounts.FromSqlRaw("sp_algo").ToList();
+            var items = await _context.ArtistCounts.FromSqlRaw("sp_algo").ToListAsync();
 
             // Crear el objeto view model que enviaremos a la vista
             var model = new AlbumPorArtistaViewModel

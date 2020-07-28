@@ -3,10 +3,11 @@ using WebDeveloper.Core.Entities;
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using WebDeveloper.Core.Interfaces;
 
 namespace WebDeveloper.Infra.Data
 {
-    public partial class ChinookContext : DbContext
+    public partial class ChinookContext : DbContext, IChinookContext
     {
         public ChinookContext()
         {
