@@ -29,6 +29,15 @@ namespace WebDeveloper.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Configurar el CORS
+            services.AddCors(options =>
+            {
+                options.AddPolicy("All",
+                    builder =>
+                    {
+                        builder.WithOrigins("*");
+                    });
+            });
             // Configurar el servicio del ChinookContext (new ChinookContext("cadena"))
             services.AddDbContext<IChinookContext, ChinookContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ChinookConnection")));
             services.AddTransient<IReportesService, ReportesService>();
@@ -47,6 +56,8 @@ namespace WebDeveloper.Api
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors();
 
             app.UseAuthorization();
 

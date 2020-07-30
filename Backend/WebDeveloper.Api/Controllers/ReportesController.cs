@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using WebDeveloper.Core.Interfaces;
 using WebDeveloper.Core.ViewModels;
@@ -20,6 +21,7 @@ namespace WebDeveloper.Api.Controllers
         }
         [HttpGet]
         [Route("AlbumPorArtista")]
+        [EnableCors("All")]
         public IActionResult Get()
         {
             var reporte = _reportesService.ObtenerAlbumPorArtista();
