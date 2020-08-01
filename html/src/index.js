@@ -13,13 +13,39 @@
 // actualizarBody();
 
 import $ from "jquery";
+import ROOT_URL, { ROOT_URL_PROD } from "./variables";
+import "./styles/main.scss";
 
 $(function() {
+    $("#otroBoton").on("click", function(e){
+        alert("otro");
+    })
+    // Manejar el evento click del boton guardar
+    $("#formArtista").on("submit", function (e) {
+        e.preventDefault();
+
+        // Obtener el nombre de artista a insertar
+        const nombre = e.target["nombreArtista"].value;
+        
+        // Hacer la llamada POST para insertar el artista
+        $.ajax({
+            method: "POST",
+            url: `${ROOT_URL}/artists`,
+            data: JSON.stringify({ name: nombre }),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).done(function(data){
+            console.log(data);
+        }).fail(function(error){
+            console.error(error);
+        })
+    })
     // invocar al servicio web mediante AJAX
     // GET https://localhost:44307/api/reportes/AlbumPorArtista
     $.ajax({
         method: "GET",
-        url: "https://localhost:44307/api/reportes/AlbumPorArtista"
+        url: `${ROOT_URL}/reportes/AlbumPorArtista`
     }).done(function (data) {
         console.info("respuesta del servicio", data);
 

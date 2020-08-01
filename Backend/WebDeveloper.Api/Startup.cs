@@ -35,7 +35,9 @@ namespace WebDeveloper.Api
                 options.AddPolicy("All",
                     builder =>
                     {
-                        builder.WithOrigins("*");
+                        builder.WithOrigins("*")
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
                     });
             });
             // Configurar el servicio del ChinookContext (new ChinookContext("cadena"))
