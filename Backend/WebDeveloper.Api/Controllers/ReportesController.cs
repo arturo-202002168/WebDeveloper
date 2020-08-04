@@ -19,9 +19,14 @@ namespace WebDeveloper.Api.Controllers
         {
             _reportesService = reportesService;
         }
+
+        /// <summary>
+        /// La descripcion de la funcion
+        /// </summary>
+        /// <returns>Lo que retorna la funcion</returns>
         [HttpGet]
         [Route("AlbumPorArtista")]
-        [EnableCors("All")]
+        //[EnableCors("All")]
         public IActionResult Get()
         {
             var reporte = _reportesService.ObtenerAlbumPorArtista();

@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Serilog;
 using WebDeveloper.Core.Interfaces;
 using WebDeveloper.Core.Services;
 using WebDeveloper.Infra.Data;
@@ -32,7 +33,7 @@ namespace WebDeveloper.Api
             // Configurar el CORS
             services.AddCors(options =>
             {
-                options.AddPolicy("All",
+                options.AddDefaultPolicy(
                     builder =>
                     {
                         builder.WithOrigins("*")
@@ -40,22 +41,46 @@ namespace WebDeveloper.Api
                         .AllowAnyHeader();
                     });
             });
+            //services.AddCors(options =>
+            //{
+            //    options.AddPolicy("All",
+            //        builder =>
+            //        {
+            //            builder.WithOrigins("*")
+            //            .AllowAnyMethod()
+            //            .AllowAnyHeader();
+            //        });
+            //});
             // Configurar el servicio del ChinookContext (new ChinookContext("cadena"))
             services.AddDbContext<IChinookContext, ChinookContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ChinookConnection")));
             services.AddTransient<IReportesService, ReportesService>();
 
             services.AddControllers();
+
+            services.AddSwaggerGen();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseStaticFiles();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseSerilogRequestLogging();
+
             app.UseHttpsRedirection();
+
+            // Habilitar Swagger
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                var swaggerJsonBasePath = string.IsNullOrWhiteSpace(c.RoutePrefix) ? "." : "..";
+                c.SwaggerEndpoint("swagger/swagger.json", "");
+                c.RoutePrefix = string.Empty;
+            });
 
             app.UseRouting();
 

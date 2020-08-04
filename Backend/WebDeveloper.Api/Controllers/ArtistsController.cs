@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using WebDeveloper.Core.Entities;
 using WebDeveloper.Core.Interfaces;
 using WebDeveloper.Infra.Data;
@@ -13,18 +14,21 @@ using WebDeveloper.Infra.Data;
 namespace WebDeveloper.Api.Controllers
 {
     [Route("api/[controller]")]
-    [EnableCors("All")]
     public class ArtistsController : Controller
     {
         private readonly IChinookContext _context;
-        public ArtistsController(IChinookContext context)
+        private readonly ILogger<ArtistsController> _logger;
+        public ArtistsController(IChinookContext context, ILogger<ArtistsController> logger)
         {
             _context = context;
+            _logger = logger;
         }
         // GET: api/<controller>
         [HttpGet]
         public IEnumerable<string> Get()
         {
+            // Escribir un mensaje en el log
+            _logger.LogInformation("Alguien ha visitado el metodo GET de api/artist");
             return new string[] { "value1", "value2" };
         }
 
@@ -32,7 +36,7 @@ namespace WebDeveloper.Api.Controllers
         [HttpGet("{id}")]
         public string Get(int id)
         {
-            return "value";
+            throw new Exception("Este es un error provocado");
         }
 
         // POST api/<controller>
