@@ -27,6 +27,13 @@ namespace WebDeveloper.Mvc
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Configurar el esquema de autenticacion
+            services.AddAuthentication("CookieAuth")
+                .AddCookie("CookieAuth", config =>
+                {
+                    config.Cookie.Name = "CibertecAuth";
+                    //config.LoginPath = "/Seguridad/Iniciar";
+                });
             // Configurar el servicio del ChinookContext (new ChinookContext("cadena"))
             services.AddDbContext<IChinookContext, ChinookContext>(options => options.UseSqlServer("server=.;database=Chinook;trusted_connection=true;"));
 
@@ -51,8 +58,11 @@ namespace WebDeveloper.Mvc
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+
             app.UseRouting();
 
+            app.UseAuthentication();
+            // Esta linea tiene que ir siempre despues del routing y antes de los endpoints
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

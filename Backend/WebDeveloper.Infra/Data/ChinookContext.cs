@@ -16,6 +16,7 @@ namespace WebDeveloper.Infra.Data
         public ChinookContext(DbContextOptions<ChinookContext> options)
             : base(options)
         {
+            // desactivar la convencion de pluralizacion
         }
 
         public virtual DbSet<Album> Albums { get; set; }
@@ -30,6 +31,7 @@ namespace WebDeveloper.Infra.Data
         public virtual DbSet<Playlist> Playlists { get; set; }
         public virtual DbSet<PlaylistTrack> PlaylistTracks { get; set; }
         public virtual DbSet<Track> Tracks { get; set; }
+        public virtual DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

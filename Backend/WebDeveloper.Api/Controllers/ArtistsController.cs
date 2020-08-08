@@ -13,6 +13,9 @@ using WebDeveloper.Infra.Data;
 
 namespace WebDeveloper.Api.Controllers
 {
+    /// <summary>
+    /// Este controlador sirve para manejar los endpoints de artistas
+    /// </summary>
     [Route("api/[controller]")]
     public class ArtistsController : Controller
     {
@@ -23,12 +26,17 @@ namespace WebDeveloper.Api.Controllers
             _context = context;
             _logger = logger;
         }
-        // GET: api/<controller>
+        
+        /// <summary>
+        /// Obtener los valores de artistas
+        /// </summary>
+        /// <returns>La lista de artistas</returns>
         [HttpGet]
         public IEnumerable<string> Get()
         {
             // Escribir un mensaje en el log
             _logger.LogInformation("Alguien ha visitado el metodo GET de api/artist");
+
             return new string[] { "value1", "value2" };
         }
 
