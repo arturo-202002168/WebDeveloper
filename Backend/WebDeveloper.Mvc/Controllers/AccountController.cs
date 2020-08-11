@@ -16,21 +16,23 @@ namespace WebDeveloper.Mvc.Controllers
         {
             _context = context;
         }
-        public IActionResult Login()
+
+        public IActionResult Login(string returnUrl = null)
         {
-            
+            // Guardar el returnUrl en el ViewData
+            ViewData["ReturnUrl"] = returnUrl;
             return View();
-            //return RedirectToAction("AlbumesPorArtista", "Reportes");
         }
 
         [HttpPost]
-        public IActionResult Login(string email, string password, string returnUrl)
+        public IActionResult Login(string email, string password, string returnUrl = null)
         {
             // Validar que el usuario exista en la BD
             var user = _context.Users.FirstOrDefault(u => u.Email == email && u.Password == password);
-            if(user == null)
+            if (user == null)
             {
                 // No lo encontro retornar la misma vista
+                ViewData["ReturnUrl"] = returnUrl;
                 return View();
             }
 
@@ -51,9 +53,22 @@ namespace WebDeveloper.Mvc.Controllers
 
             // Iniciar la sesion
             HttpContext.SignInAsync(userPrincipal);
-            //var returnUrl = Request.Query["ReturnUrl"];
 
-            return View();
+            // Intentar la redireccion
+            return RedirectToLocal(returnUrl);
+        }
+
+        public IActionResult RedirectToLocal(string returnUrl)
+        {
+            // Esta funcion va a tener la logica de redireccionar a otra URL
+            if (Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
     }
 }
