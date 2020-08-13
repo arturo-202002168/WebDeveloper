@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Mvc;
 using WebDeveloper.Core.Interfaces;
 
@@ -17,11 +18,39 @@ namespace WebDeveloper.Mvc.Controllers
             _context = context;
         }
 
+        public IActionResult Index()
+        {
+            var claims = User.Identity.IsAuthenticated ? User.Claims : new List<Claim>();
+            return View(claims);
+        }
+
         public IActionResult Login(string returnUrl = null)
         {
             // Guardar el returnUrl en el ViewData
             ViewData["ReturnUrl"] = returnUrl;
             return View();
+        }
+
+        [HttpPost]
+        public async Task LoginGoogle(string returnUrl = null)
+        {
+            await HttpContext.ChallengeAsync(GoogleDefaults.AuthenticationScheme, new GoogleChallengeProperties
+            {
+                // Configurar la ruta a la que va a redireccionar luego del /signin-google
+                RedirectUri = Url.Action("GoogleCallback", new { returnUrl })
+            });
+        }
+
+        public IActionResult GoogleCallback(string returnUrl = null)
+        {
+            return RedirectToLocal(returnUrl);
+        }
+
+        public async Task<IActionResult> Signout()
+        {
+            // Cerrar la sesion del contexto
+            await HttpContext.SignOutAsync("CookieAuth");
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]

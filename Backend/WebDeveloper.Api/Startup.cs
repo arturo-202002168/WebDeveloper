@@ -3,16 +3,20 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using WebDeveloper.Core.Interfaces;
@@ -33,6 +37,24 @@ namespace WebDeveloper.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Configurar el esquema de autenticacion con JWT Bearer
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(config =>
+            {
+                // En produccion deberian habilitar este flag
+                config.RequireHttpsMetadata = false;
+                config.TokenValidationParameters = new TokenValidationParameters
+                {
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("cibertec12345678")),
+                    ValidIssuer = "Cibertec",
+                    ValidAudience = "app-js",
+                    RequireExpirationTime = true,
+                    ValidateLifetime = true,
+                };
+            });
             // Configurar el CORS
             services.AddCors(options =>
             {
@@ -58,7 +80,11 @@ namespace WebDeveloper.Api
             services.AddDbContext<IChinookContext, ChinookContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ChinookConnection")));
             services.AddTransient<IReportesService, ReportesService>();
 
-            services.AddControllers();
+            // Configurar para que todos los endpoints (acciones) requieran de estar autenticado
+            services.AddControllers(config =>
+            {
+                config.Filters.Add(new AuthorizeFilter());
+            });
 
             services.AddSwaggerGen(c =>
             {
@@ -111,6 +137,8 @@ namespace WebDeveloper.Api
             app.UseRouting();
 
             app.UseCors();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

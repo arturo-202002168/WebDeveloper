@@ -37,6 +37,11 @@ namespace WebDeveloper.Api.Controllers
             // Escribir un mensaje en el log
             _logger.LogInformation("Alguien ha visitado el metodo GET de api/artist");
 
+            foreach(var claim in User.Claims)
+            {
+                _logger.LogInformation($"{claim.Type} - {claim.Value}");
+            }
+
             return new string[] { "value1", "value2" };
         }
 
