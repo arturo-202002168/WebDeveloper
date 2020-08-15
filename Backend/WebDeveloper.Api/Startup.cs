@@ -79,6 +79,7 @@ namespace WebDeveloper.Api
             // Configurar el servicio del ChinookContext (new ChinookContext("cadena"))
             services.AddDbContext<IChinookContext, ChinookContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ChinookConnection")));
             services.AddTransient<IReportesService, ReportesService>();
+            services.AddTransient<ITrackService, TrackService>();
 
             // Configurar para que todos los endpoints (acciones) requieran de estar autenticado
             services.AddControllers(config =>

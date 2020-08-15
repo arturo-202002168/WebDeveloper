@@ -12,6 +12,7 @@ namespace WebDeveloper.Core.Interfaces
         DbSet<Album> Albums { get; set; }
         DbSet<ArtistCount> ArtistCounts { get; set; }
         DbSet<User> Users { get; set; }
+        DbSet<Track> Tracks { get; set; }
         int SaveChanges();
     }
 }
