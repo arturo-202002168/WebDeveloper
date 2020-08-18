@@ -24,7 +24,6 @@ namespace WebDeveloper.Api.Controllers
 
         // GET /api/[controller]/
         [HttpGet]
-        [AllowAnonymous]
         public IActionResult Get(int? page)
         {
             try

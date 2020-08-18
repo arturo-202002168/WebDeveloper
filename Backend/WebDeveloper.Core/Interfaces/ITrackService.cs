@@ -8,6 +8,6 @@ namespace WebDeveloper.Core.Interfaces
 {
     public interface ITrackService
     {
-        GetListViewModel<Track> GetList(int? page);
+        GetListViewModel<TrackViewModel> GetList(int? page);
     }
 }
