@@ -46,6 +46,7 @@ namespace WebDeveloper.Api.Controllers
             var identidad = new[]
             {
                 new Claim(ClaimTypes.Name, user.Name),
+                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim("DNI", user.Dni)
             };
