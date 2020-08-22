@@ -42,6 +42,7 @@ namespace WebDeveloper.SignalRServer
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHub<ChatHub>("/chathub");
+                endpoints.MapHub<TracksHub>("/trackshub");
             });
         }
     }

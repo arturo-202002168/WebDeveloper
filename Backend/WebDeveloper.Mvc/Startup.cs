@@ -59,6 +59,7 @@ namespace WebDeveloper.Mvc
 
             // Inyectar la dependencia de los servicios, utilizando interfaces
             services.AddTransient<IReportesService, ReportesService>();
+            services.AddTransient<ITrackService, TrackService>();
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
         }
 

@@ -6,6 +6,7 @@ using WebDeveloper.Core.Entities;
 using WebDeveloper.Core.Interfaces;
 using WebDeveloper.Core.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace WebDeveloper.Core.Services
 {
@@ -28,8 +29,9 @@ namespace WebDeveloper.Core.Services
                 return new GetListViewModel<TrackViewModel>
                 {
                     Items = _chinookContext.Tracks
+                            .OrderByDescending(t => t.TrackId)
                             .Take(pageSize)
-                            .Select(t=> new TrackViewModel
+                            .Select(t => new TrackViewModel
                             {
                                 TrackId = t.TrackId,
                                 Name = t.Name,
@@ -53,7 +55,7 @@ namespace WebDeveloper.Core.Services
                 var skip = (page.Value - 1) * pageSize;
                 return new GetListViewModel<TrackViewModel>
                 {
-                    Items = _chinookContext.Tracks.Skip(skip)
+                    Items = _chinookContext.Tracks.OrderByDescending(t => t.TrackId).Skip(skip)
                             .Take(pageSize)
                             .Select(t => new TrackViewModel
                             {
@@ -74,6 +76,26 @@ namespace WebDeveloper.Core.Services
             }
 
             return null;
+        }
+
+        public async Task<IEnumerable<TrackViewModel>> GetListAll()
+        {
+            var lista = await _chinookContext.Tracks
+                            .Select(t => new TrackViewModel
+                            {
+                                TrackId = t.TrackId,
+                                Name = t.Name,
+                                AlbumId = t.AlbumId,
+                                GenreId = t.GenreId,
+                                MediaTypeId = t.MediaTypeId,
+                                AlbumName = t.Album.Title,
+                                ArtistName = t.Album.Artist.Name,
+                                GenreName = t.GenreId.HasValue ? t.Genre.Name : "NA",
+                                MediaTypeName = t.MediaType.Name,
+                                UnitPrice = t.UnitPrice
+                            })
+                            .ToListAsync();
+            return lista;
         }
     }
 }

@@ -9,7 +9,7 @@ import Chat from './Components/Chat';
 
 function App() {
   // Crear una variable de estado
-  const [vista, setVista] = React.useState("chat");
+  const [vista, setVista] = React.useState("login");
   const [user, setUser] = React.useState<IUser>();
   return (
     <div className="App">

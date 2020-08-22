@@ -13,6 +13,8 @@ namespace WebDeveloper.Core.Interfaces
         DbSet<ArtistCount> ArtistCounts { get; set; }
         DbSet<User> Users { get; set; }
         DbSet<Track> Tracks { get; set; }
+        DbSet<Genre> Genres { get; set; }
+        DbSet<MediaType> MediaTypes { get; set; }
         int SaveChanges();
     }
 }
