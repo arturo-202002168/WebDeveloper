@@ -55,7 +55,7 @@ namespace WebDeveloper.Mvc
                     };
                 });
             // Configurar el servicio del ChinookContext (new ChinookContext("cadena"))
-            services.AddDbContext<IChinookContext, ChinookContext>(options => options.UseSqlServer("server=.;database=Chinook;trusted_connection=true;"));
+            services.AddDbContext<IChinookContext, ChinookContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ChinookConnection")));
 
             // Inyectar la dependencia de los servicios, utilizando interfaces
             services.AddTransient<IReportesService, ReportesService>();
